@@ -1,0 +1,9 @@
+module singlecycle (
+               
+		input logic i_clk,
+		input logic i_rst,
+		output logic o_pc_debug 
+
+
+);
+   

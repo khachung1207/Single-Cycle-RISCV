@@ -1,0 +1,17 @@
+module imm_gen (
+    input logic [11:0] i_inst,      // 12-bit input data
+    output logic [31:0] o_imm      // 32-bit output data
+);
+
+    always_comb begin
+        // Check the sign bit (bit 11) of the 12-bit input
+        if (i_inst[11] == 1'b1) begin
+            // If the sign bit is 1, extend the sign (fill upper bits with 1s)
+            o_imm = {20'b11111111111111111111, i_inst}; // Fill with 1's
+        end else begin
+            // If the sign bit is 0, extend with 0s
+            o_imm = {20'b00000000000000000000, i_inst}; // Fill with 0's
+        end
+    end
+
+endmodule

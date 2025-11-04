@@ -1,0 +1,20 @@
+module pc  
+#(
+    parameter N = 32                       // 32-bit program counter
+)(
+    input logic i_clk,                     // Clock signal
+    input logic i_rst,                     // Reset signal
+    
+    input logic [N-1:0] i_mux_before_pc,   // Input for the next PC value
+    output logic [N-1:0] o_pc               // Output for the current PC value
+);
+
+    // Sequential logic for updating the PC
+    always_ff @(posedge i_clk or posedge i_rst) begin
+        if (i_rst)                          // Check for active-high reset
+           o_pc <= 32'b0;                   // Reset PC to 0 on reset
+        else 
+           o_pc <= i_mux_before_pc;         // Update PC if enable is high
+    end
+
+endmodule

@@ -1,0 +1,65 @@
+`timescale 1ps/1ps
+
+module singlecycle_tb;
+
+    // Input signals
+    logic i_clk;
+    logic i_rst;
+    logic [31:0] i_io_sw;
+    logic [3:0]  i_io_btn;
+
+    // Output signals
+    logic [31:0] o_pc_debug;
+    logic        o_insn_vld;
+    logic [31:0] o_io_ledr;
+    logic [31:0] o_io_ledg;
+    logic [31:0] o_io_lcd;
+    logic [31:0] a, b, c, d;
+
+    // Instantiate the DUT (Device Under Test)
+    singlecycle dut (
+        .i_clk      (i_clk),
+        .i_rst      (i_rst),
+        .i_io_sw    (i_io_sw),
+        .i_io_btn   (i_io_btn),
+        .o_pc_debug (o_pc_debug),
+        .o_insn_vld (o_insn_vld),
+        .o_io_ledr  (o_io_ledr),
+        .o_io_ledg  (o_io_ledg),
+        .o_io_lcd   (o_io_lcd),
+        .a          (a),
+        .b          (b),
+        .c          (c),
+        .d          (d)
+    );
+
+    // Generate clock signal with a period of 20 ps (toggle every 10 ps)
+    initial begin
+        i_clk = 0;
+        forever #10 i_clk = ~i_clk;
+    end
+
+    // Initialize inputs and apply reset
+    initial begin
+        // Initialize inputs
+        i_rst    = 1;
+        i_io_sw  = 32'd0;
+        i_io_btn = 4'd0;
+
+        // Hold reset for 50 ps, then release
+        #50 i_rst = 0;
+
+        // Optionally, add more stimulus here
+        // ...
+
+        // Finish simulation after a specified time
+        #1000 $finish;
+    end
+
+    // Optional: Monitor outputs
+    initial begin
+        $monitor("Time: %0t ps | PC Debug: %h | Insn VLD: %b | a: %h | b: %h | c: %h | d: %h",
+                 $time, o_pc_debug, o_insn_vld, a, b, c, d);
+    end
+
+endmodule

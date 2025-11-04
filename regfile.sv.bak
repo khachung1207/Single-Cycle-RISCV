@@ -1,0 +1,22 @@
+module regfile
+#(
+  parameter DATA_N = 32,
+  parameter SIZE = 32
+)
+(
+  input logic clk, RegWEn,
+  input logic [$clog2(SIZE) - 1:0] rsW, rsR1, rsR2,
+  input logic [DATA_N-1:0] dataW,
+  output logic [DATA_N-1:0] dataR1, dataR2
+);
+
+  logic [DATA_N-1:0] regs [0:SIZE-1];
+
+  always_ff @(posedge clk)
+    if (RegWEn)
+      regs[rsW] <= dataW;
+
+  assign dataR1 = regs[rsR1];
+  assign dataR2 = regs[rsR2];
+
+endmodule

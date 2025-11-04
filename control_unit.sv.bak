@@ -1,0 +1,59 @@
+0: alu_op = 4'b0000;//sb
+				1: alu_op = 4'b0010; //shw
+			   2: alu_op = 4'b0011; //sw
+            endcase
+		end
+		else if (imm_sel_temp = 3'd2) begin // B_type
+		      imm_sel = 3;
+				rd_wren = insn_vld = opb_sel  = mem_wren = br_un = 0;
+				opa_sel = 1;
+				alu_op = 4'd0;
+				wb_sel = 2'b00;
+		     	case(func_3)
+				0: pc_sel = (br_eqal) ?1:0;//beq
+				5: begin//bge 
+					br_un = 1;
+					pc_sel = (br_less) ?0:1;
+					end
+			   7: begin//bgeu
+					br_un = 0;
+					pc_sel = (br_less) ?0:1;
+					end
+				4: begin//blt
+					br_un =1;
+					pc_sel = (br_less) ?1:0;
+				end
+				6: begin//bltu
+					br_un = 0;
+					pc_sel = (br_less) ?1:0;
+				end
+				1: begin//bne
+					br_un = 0;
+					pc_sel = (br_eqal) ?0:1;
+				end
+				endcase
+		else if (imm_sel_temp = 3'd3) begin // J_type
+		      imm_sel = 3'd5;
+				pc_sel = rd_wren = opa_sel = 1;
+				insn_vld = br_un = opb_sel = mem_wren = 0;
+				wb_sel = 2'b10;
+		      alu_op = 0;//jal
+		end
+		else if (imm_sel_temp = 3'd4) begin // U_type
+		      imm_sel = 3'd4;
+				pc_sel = insn_vld = br_un = opb_sel = 0;
+				rd_wren = opa_sel = 1;
+		     	case(inst[6:0])
+				17: alu_op = 4'd0;//auipc
+				37: alu_op = 4'd0; //lui-----------
+            endcase
+		end
+		end
+	   	
+		end
+end
+
+always_comb begin 
+	
+end 
+endmodule
